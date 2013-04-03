@@ -11,7 +11,7 @@
                     "alertTextCheckboxe": "* This checkbox is required",
                     "alertTextDateRange": "* Both date range fields are required"
                 },
-                "requiredInFunction": { 
+                "requiredInFunction": {
                     "func": function(field, rules, i, options){
                         return (field.val() == "test") ? true : false;
                     },
@@ -56,7 +56,7 @@
                 "future": {
                     "regex": "none",
                     "alertText": "* Date past "
-                },	
+                },
                 "maxCheckbox": {
                     "regex": "none",
                     "alertText": "* Maximum ",
@@ -94,23 +94,24 @@
                     "regex": /^[\-\+]?((([0-9]{1,3})([,][0-9]{3})*)|([0-9]+))?([\.]([0-9]+))?$/,
                     "alertText": "* Invalid floating decimal number"
                 },
-                "date": {                    
+                "date": {
                     //	Check if date is valid by leap year
 			"func": function (field) {
 					var pattern = new RegExp(/^(\d{4})[\/\-\.](0?[1-9]|1[012])[\/\-\.](0?[1-9]|[12][0-9]|3[01])$/);
 					var match = pattern.exec(field.val());
 					if (match == null)
 					   return false;
-	
+
 					var year = match[1];
 					var month = match[2]*1;
-					var day = match[3]*1;					
+					var day = match[3]*1;
 					var date = new Date(year, month - 1, day); // because months starts from 0.
-	
+
 					return (date.getFullYear() == year && date.getMonth() == (month - 1) && date.getDate() == day);
-				},                		
+				},
 			 "alertText": "* Invalid date, must be in YYYY-MM-DD format"
                 },
+
                 "ipv4": {
                     "regex": /^((([01]?[0-9]{1,2})|(2[0-4][0-9])|(25[0-5]))[.]){3}(([0-1]?[0-9]{1,2})|(2[0-4][0-9])|(25[0-5]))$/,
                     "alertText": "* Invalid IP address"
@@ -131,6 +132,143 @@
                     "regex": /^[0-9a-zA-Z]+$/,
                     "alertText": "* No special characters allowed"
                 },
+                // DAT00003 DATUM  EIN=(TTMM,T.M.),AUS='TTMM'
+                // for T.M.JJ. ([1-9][\.][1-9][\.][0-9]{2}[\.]) 
+                "DAT00003": {
+                   // "regex": /^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$|^(?:(?:(?:0?[13578]|1[02])(\/|-)31)|(?:(?:0?[1,3-9]|1[0-2])(\/|-)(?:29|30)))(\/|-)(?:[1-9]\d\d\d|\d[1-9]\d\d|\d\d[1-9]\d|\d\d\d[1-9])$|^(?:(?:0?[1-9]|1[0-2])(\/|-)(?:0?[1-9]|1\d|2[0-8]))(\/|-)(?:[1-9]\d\d\d|\d[1-9]\d\d|\d\d[1-9]\d|\d\d\d[1-9])$|^(0?2(\/|-)29)(\/|-)(?:(?:0[48]00|[13579][26]00|[2468][048]00)|(?:\d\d)?(?:0[48]|[2468][048]|[13579][26]))$/,
+                   "regex": /^(((0[1-9]|[12][0-9]|3[01])(0[1-9]|1[012]))|([1-9][\.][1-9][\.]))$/,
+                      //$|^(?:(?:(?:0?[13578]|1[02])(\/|-)31)|(?:(?:0?[1,3-9]|1[0-2])(\/|-)(?:29|30)))(\/|-)(?:[1-9]\d\d\d|\d[1-9]\d\d|\d\d[1-9]\d|\d\d\d[1-9])$|^(?:(?:0?[1-9]|1[0-2])(\/|-)(?:0?[1-9]|1\d|2[0-8]))(\/|-)(?:[1-9]\d\d\d|\d[1-9]\d\d|\d\d[1-9]\d|\d\d\d[1-9])$|^(0?2(\/|-)29)(\/|-)(?:(?:0[48]00|[13579][26]00|[2468][048]00)|(?:\d\d)?(?:0[48]|[2468][048]|[13579][26]))$/,
+                   "dateFormat": "TTMM",
+                   "alertText": "* Please enter valid date in correct format"
+                },
+                // DAT00004 DATUM  EIN=(TTMMJJ,T.M.JJ,TT.MM.JJ),AUS='TTMMJJ'
+                "DAT00004": {
+                   "regex": /^(((0[1-9]|[12][0-9]|3[01])(0[1-9]|1[012])([0-9]{2}))|([1-9][\.][1-9][\.][0-9]{2})|((0[1-9]|[12][0-9]|3[01])[\.](0[1-9]|1[012])[\.][0-9]{2}))$/,
+                   "dateFormat": "TTMMJJ",
+                   "alertText": "* Please enter valid date in correct format"
+                },
+                // DAT00005 DATUM  EIN=(TTMMJJJJ,TTMMJJ,T.M.JJ,T.M.JJJJ),AUS='TTMMJJJJ'
+                "DAT00005": {
+                   "regex": /^(((0[1-9]|[12][0-9]|3[01])(0[1-9]|1[012])([0-9]{4}))|((0[1-9]|[12][0-9]|3[01])(0[1-9]|1[012])([0-9]{2}))|([1-9][\.][1-9][\.][0-9]{4})|([1-9][\.][1-9][\.][0-9]{2}))$/,
+                   "dateFormat": "TTMMJJJJ",
+                   "alertText": "* Please enter valid date in correct format"
+                },
+                // DAT00006 DATUM  EIN=(MMJJ,M.JJ),AUS='MMJJ'
+                "DAT00006": {
+                   "regex": /^(((0[1-9]|1[012])([0-9]{2}))|([1-9][\.][0-9]{2}))$/,
+                   "dateFormat": "MMJJ",
+                   "alertText": "* Please enter valid date in correct format"
+                },
+                //DAT00008 DATUM EIN=(MM.JJ,MM.JJJJ),AUS='MM.JJJJ'
+                "DAT00008": {
+                   "regex": /^(((0[1-9]|1[012])[\.]([0-9]{2}))|((0[1-9]|1[012])[\.][0-9]{4}))$/,
+                   "dateFormat": "MM.JJJJ",
+                   "alertText": "* Please enter valid date in correct format"
+                },
+                // DAT00012 DATUM  EIN=(TTMMJJJJ,T.M.JJJJ,TT.MM.JJJJ),AUS=TT.MM.JJJJ
+                "DAT00012": {
+                   "regex": /^(((0[1-9]|[12][0-9]|3[01])(0[1-9]|1[012])([0-9]{4}))|([1-9][\.][1-9][\.][0-9]{4})|((0[1-9]|[12][0-9]|3[01])[\.](0[1-9]|1[012])[\.][0-9]{4}))$/,
+                   "dateFormat": "TT.MM.JJJJ",
+                   "alertText": "* Please enter valid date in correct format"
+                },
+                // DAT00013 DATUM  EIN=(TTMM,T.M.,T.MM.,TT.M.),AUS=TT.MM.
+                "DAT00013": {
+                   "regex": /^((0[1-9]|[12][0-9]|3[01])(0[1-9]|1[012])|([1-9][\.][1-9][\.])|(([1-9])[\.](0[1-9]|1[012])[\.])|((0[1-9]|[12][0-9]|3[01])[\.][1-9][\.]))$/,
+                   "dateFormat": "TT.MM.",
+                   "alertText": "* Please enter valid date in correct format"
+                },
+                "amount1": {
+                     // "regex": /^[\-\+]?((([0-9]{1,3})([,][0-9]{3})*)|([0-9]+))?([\.]([0-9]+))?$/,
+				        "regex": /^[\+\-]?(([0-9]{1,3})([.][0-9]{3})*)?([\,]([0-9]{2}))$/,
+				                    "alertText": "* Enter valid amount"
+                },
+                "ADV0200": {
+                         "regex": /^(([1-9]{1,2}))$/,
+                         "beforeComma": 2,
+                         "afterComma":0,
+                         "alertText": "* Enter valid amount and correct format."
+                },
+                "ADV0500": {
+                         "regex": /^(([1-9]{1,5}))$/,
+                         "beforeComma": 5,
+                         "afterComma":0,
+                         "alertText": "* Enter valid amount and correct format"
+                },
+                "BTRM0100": {
+                         "regex": /^[\+]?(([1-9]{1}))$/,
+                         "beforeComma": 1,
+                         "afterComma":0,
+                         "alertText": "* Enter valid amount and correct format"
+                },
+                "BTRM0101": {
+                      //   "regex": /^[\+]?((([0-9]{1})?([\,]([0-9]{1})))| ([0-9]{1}))$/,
+                      "regex": /^[\+]?((([0-9]{1}))|([0-9]{1}))?(([\,]([0-9]{1})))?$/,
+                         "beforeComma": 1,
+                         "afterComma":1,
+                         "alertText": "* Enter valid amount and correct format"
+                },
+                "BTRM0102": {
+                      "regex": /^[\+]?((([0-9]{1}))|([0-9]{1}))?(([\,]([0-9]{1,2})))?$/,
+                         "beforeComma": 1,
+                         "afterComma":2,
+                         "alertText": "* Enter valid amount and correct format"
+                },
+                "BTRM0104": {
+                      "regex": /^[\+]?((([0-9]{1}))|([0-9]{1}))?(([\,]([0-9]{1,4})))?$/,
+                         "beforeComma": 1,
+                         "afterComma":4,
+                         "alertText": "* Enter valid amount and correct format"
+                },
+                "BTRM0106": {
+                      "regex": /^[\+]?((([0-9]{1}))|([0-9]{1}))?(([\,]([0-9]{1,6})))?$/,
+                         "beforeComma": 1,
+                         "afterComma":6,
+                         "alertText": "* Enter valid amount and correct format"
+                },
+                "BTRM0107": {
+                      "regex": /^[\+]?((([0-9]{1}))|([0-9]{1}))?(([\,]([0-9]{1,7})))?$/,
+                         "beforeComma": 1,
+                         "afterComma":7,
+                         "alertText": "* Enter valid amount and correct format"
+                },
+                "BTRM0200": {
+                     "regex": /^[\+]?(([1-9]{1,2})(([\.][1-9]{1})*))?$/,
+                     "beforeComma": 2,
+                     "afterComma":0,
+                     "alertText": "* Enter valid amount and correct format"
+                },
+                "BTRM0201": {
+                     "regex": /^[\+]?(([1-9]{1,2})(([\.][1-9]{1})*))?(([\,][1-9]{1}))?$/,
+                     "beforeComma": 2,
+                     "afterComma":1,
+                     "alertText": "* Enter valid amount and correct format"
+                },
+                "BTRM0202": {
+                     "regex": /^[\+]?(([1-9]{1,2})(([\.][1-9]{1})*))?(([\,][1-9]{1,2}))?$/,
+                     "beforeComma": 2,
+                     "afterComma":2,
+                     "alertText": "* Enter valid amount and correct format"
+                }, 
+                "BTRM0205": {
+                             "regex": /^[\+]?(([1-9]{1,2})(([\.][1-9]{1})*))?(([\,][1-9]{1,5}))?$/,
+                             "beforeComma": 2,
+                             "afterComma":5,
+                             "alertText": "* Enter valid amount and correct format"
+                },
+                "BTRM0207": {
+                             "regex": /^[\+]?(([1-9]{1,2})(([\.][1-9]{1})*))?(([\,][1-9]{1,7}))?$/,
+                             "beforeComma": 2,
+                             "afterComma":7,
+                             "alertText": "* Enter valid amount and correct format"
+                },
+                "BTRM0208": {
+                             "regex": /^[\+]?(([1-9]{1,2})(([\.][1-9]{1})*))?(([\,][1-9]{1,8}))?$/,
+                             "beforeComma": 2,
+                             "afterComma":8,
+                             "alertText": "* Enter valid amount and correct format"
+                },
+
+                
                 // --- CUSTOM RULES -- Those are specific to the demos, they can be removed or changed to your likings
                 "ajaxUserCall": {
                     "url": "ajaxValidateFieldUser",
@@ -169,24 +307,24 @@
                 "validate2fields": {
                     "alertText": "* Please input HELLO"
                 },
-	            //tls warning:homegrown not fielded 
+	            //tls warning:homegrown not fielded
                 "dateFormat":{
                     "regex": /^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$|^(?:(?:(?:0?[13578]|1[02])(\/|-)31)|(?:(?:0?[1,3-9]|1[0-2])(\/|-)(?:29|30)))(\/|-)(?:[1-9]\d\d\d|\d[1-9]\d\d|\d\d[1-9]\d|\d\d\d[1-9])$|^(?:(?:0?[1-9]|1[0-2])(\/|-)(?:0?[1-9]|1\d|2[0-8]))(\/|-)(?:[1-9]\d\d\d|\d[1-9]\d\d|\d\d[1-9]\d|\d\d\d[1-9])$|^(0?2(\/|-)29)(\/|-)(?:(?:0[48]00|[13579][26]00|[2468][048]00)|(?:\d\d)?(?:0[48]|[2468][048]|[13579][26]))$/,
                     "alertText": "* Invalid Date"
                 },
-                //tls warning:homegrown not fielded 
+                //tls warning:homegrown not fielded
 				"dateTimeFormat": {
 	                "regex": /^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])\s+(1[012]|0?[1-9]){1}:(0?[1-5]|[0-6][0-9]){1}:(0?[0-6]|[0-6][0-9]){1}\s+(am|pm|AM|PM){1}$|^(?:(?:(?:0?[13578]|1[02])(\/|-)31)|(?:(?:0?[1,3-9]|1[0-2])(\/|-)(?:29|30)))(\/|-)(?:[1-9]\d\d\d|\d[1-9]\d\d|\d\d[1-9]\d|\d\d\d[1-9])$|^((1[012]|0?[1-9]){1}\/(0?[1-9]|[12][0-9]|3[01]){1}\/\d{2,4}\s+(1[012]|0?[1-9]){1}:(0?[1-5]|[0-6][0-9]){1}:(0?[0-6]|[0-6][0-9]){1}\s+(am|pm|AM|PM){1})$/,
                     "alertText": "* Invalid Date or Date Format",
                     "alertText2": "Expected Format: ",
-                    "alertText3": "mm/dd/yyyy hh:mm:ss AM|PM or ", 
+                    "alertText3": "mm/dd/yyyy hh:mm:ss AM|PM or ",
                     "alertText4": "yyyy-mm-dd hh:mm:ss AM|PM"
 	            }
             };
-            
+
         }
     };
 
     $.validationEngineLanguage.newLang();
-    
+
 })(jQuery);
