@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+	<title>JQuery Validation Engine</title>
+	<link rel="stylesheet" href="../css/validationEngine.jquery.css" type="text/css"/>
+	<link rel="stylesheet" href="../css/template.css" type="text/css"/>
+	<script src="../js/jquery-1.8.2.min.js" type="text/javascript">
+	</script>
+	<script src="../js/languages/jquery.validationEngine-en.js" type="text/javascript" charset="utf-8">
+	</script>
+	<script src="../js/jquery.validationEngine.js" type="text/javascript" charset="utf-8">
+	</script>
+
+	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/base/jquery-ui.css">
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/jquery-ui.min.js"></script>
+	<script>
+		jQuery(document).ready(function(){
+			// binds form submission and fields to the validation engine
+//			$( ".datepicker" ).datepicker();
+			jQuery("#formID").validationEngine();
+		});
+
+		/**
+		*
+		* @param {jqObject} the field where the validation applies
+		* @param {Array[String]} validation rules for this field
+		* @param {int} rule index
+		* @param {Map} form options
+		* @return an error string if validation failed
+		*/
+		function checkHELLO(field, rules, i, options){
+			if (field.val() != "HELLO") {
+				// this allows to use i18 for the error msgs
+				return options.allrules.validate2fields.alertText;
+			}
+		}
+	</script>
+</head>
+<body>
+	<p>
+		<a href="../index.html" >Back to index</a>
+	</p>
+	<p>
+		This demonstration shows how to use a datepicker with the validation engine
+		<br/>
+	</p>
+	
+	<form id="formID" class="formular" method="post" action="">
+	<table width="100%">
+		<tbody>
+			<tr>
+				<td>
+		<fieldset>
+
+			<legend>
+				Amount
+			</legend>
+			
+			<span>
+				<b>Rule: </b>
+				ADV0200  BETRAG NACHK=0,VORK=2,WERT=(>0)
+			</span>
+			
+			<label>
+				<input value="" class="validate[amount[ADV0200]] text-input" type="text" name="amountid" id="amountid" />
+			</label>
+
+			<span>
+				<b>Rule: </b>
+				ADV0500  BETRAG NACHK=0,VORK=5,WERT=(>0)
+			</span>
+			
+			<label>
+				<input value="" class="validate[amount[ADV0500]] text-input" type="text" name="amountid1" id="amountid1"/>
+			</label>
+
+
+			<span>
+				<b>Rule: </b>
+				BTRM0100 BETRAG NACHK=0,VORK=1,PLUS='+'
+			</span>
+			
+			<label>
+				<input value="" class="validate[amount[BTRM0100]] text-input" type="text" name="amountid2" id="amountid2" />
+			</label>
+
+			<span>
+				<b>Rule: </b>
+				BTRM0101 BETRAG NACHK=1,VORK=1,TRENNZ='.',DEZ=',',PLUS='+' 
+			</span>
+			
+			<label>
+				<input value="" class="validate[amount[BTRM0101]] text-input" type="text" name="amountid3" id="amountid3" />
+			</label>
+
+			<span>
+				<b>Rule: </b>
+				BTRM0102 BETRAG NACHK=2,VORK=1,TRENNZ='.',DEZ=',',PLUS='+'
+			</span>
+			
+			<label>
+				<input value="" class="validate[amount[BTRM0102]] text-input" type="text" name="amountid4" id="amountid4" />
+			</label>
+
+			<span>
+				<b>Rule: </b>
+				BTRM0104 BETRAG NACHK=4,VORK=1,TRENNZ='.',DEZ=',',PLUS='+'
+			</span>
+			
+			<label>
+				<input value="" class="validate[amount[BTRM0104]] text-input" type="text" name="amountid4" id="amountid4" />
+			</label>
+
+			<span>
+				<b>Rule: </b>
+				BTRM0106 BETRAG NACHK=6,VORK=1,TRENNZ='.',DEZ=',',PLUS='+'
+			</span>
+			
+			<label>
+				<input value="" class="validate[amount[BTRM0106]] text-input" type="text" name="amountid4" id="amountid4" />
+			</label>
+
+			<span>
+				<b>Rule: </b>
+				BTRM0107 BETRAG NACHK=7,VORK=1,TRENNZ='.',DEZ=',',PLUS='+'
+			</span>
+			
+			<label>
+				<input value="" class="validate[amount[BTRM0107]] text-input" type="text" name="amountid4" id="amountid4" />
+			</label>
+
+			<span>
+				<b>Rule: </b>
+				BTRM0200 BETRAG NACHK=0,VORK=2,TRENNZ='.',PLUS='+'
+			</span>
+			
+			<label>
+				<input value="" class="validate[amount[BTRM0200]] text-input" type="text" name="amountid5" id="amountid5" />
+			</label>
+
+			<span>
+				<b>Rule: </b>
+				BTRM0201 BETRAG NACHK=1,VORK=2,TRENNZ='.',DEZ=',',PLUS='+'
+			</span>
+			
+			<label>
+				<input value="" class="validate[amount[BTRM0201]] text-input" type="text" name="amountid6" id="amountid6" />
+			</label>
+
+			<span>
+				<b>Rule: </b>
+				BTRM0202 BETRAG NACHK=2,VORK=2,TRENNZ='.',DEZ=',',PLUS='+'
+			</span>
+			
+			<label>
+				<input value="" class="validate[amount[BTRM0202]] text-input" type="text" name="amountid7" id="amountid7" />
+			</label>
+
+			<span>
+				<b>Rule: </b>
+				BTRM0205 BETRAG NACHK=5,VORK=2,TRENNZ='.',DEZ=',',PLUS='+'
+			</span>
+			
+			<label>
+				<input value="" class="validate[amount[BTRM0205]] text-input" type="text" name="amountid8" id="amountid8" />
+			</label>
+			<span>
+				<b>Rule: </b>
+				BTRM0207 BETRAG NACHK=7,VORK=2,TRENNZ='.',DEZ=',',PLUS='+'
+			</span>
+			
+			<label>
+				<input value="" class="validate[amount[BTRM0207]] text-input" type="text" name="amountid9" id="amountid9" />
+			</label>
+
+			<span>
+				<b>Rule: </b>
+				BTRM0208 BETRAG NACHK=8,VORK=2,TRENNZ='.',DEZ=',',PLUS='+'
+			</span>
+			
+			<label>
+				<input value="" class="validate[amount[BTRM0208]] text-input" type="text" name="amountid10" id="amountid10" />
+			</label>
+		
+			<label>
+				<input class="submit" type="submit" value="Validate &amp; Send the form!"/><hr/>
+			</label>
+		</fieldset>
+			</td>
+		<td>
+		<fieldset>
+			<legend>
+				Date
+			</legend>
+			<span>
+			  <b>Rule:</b>
+			  DAT00003 DATUM  EIN=(TTMM,T.M.),AUS='TTMM' 
+			</span>
+			<label>
+				<input value="" class="validate[date[DAT00003]] text-input" type="text" name="date1" id="date1" />
+			</label>
+			<span>
+			  <b>Rule:</b>
+			  DAT00004 DATUM  EIN=(TTMMJJ,T.M.JJ,TT.MM.JJ),AUS='TTMMJJ'
+			</span>
+			<label>
+				<input value="" class="validate[date[DAT00004]] text-input" type="text" name="date2" id="date2" />
+			</label>
+
+			<span>
+			  <b>Rule:</b>
+			  DAT00005 DATUM  EIN=(TTMMJJJJ,TTMMJJ,T.M.JJ,T.M.JJJJ),AUS='TTMMJJJJ' 
+			</span>
+			<label>
+				<input value="" class="validate[date[DAT00005]] text-input" type="text" name="date3" id="date3" />
+			</label>
+			<span>
+			  <b>Rule:</b>
+			  DAT00006 DATUM  EIN=(MMJJ,M.JJ),AUS='MMJJ'
+			</span>
+			<label>
+				<input value="" class="validate[date[DAT00006]] text-input" type="text" name="date4" id="date4" />
+			</label>
+			<span>
+			  <b>Rule:</b>
+			  DAT00008 DATUM EIN=(MM.JJ,MM.JJJJ),AUS='MM.JJJJ' 
+			</span>
+			<label>
+				<input value="" class="validate[date[DAT00008]] text-input" type="text" name="date5" id="date5" />
+			</label>
+			<span>
+			  <b>Rule:</b>
+			  DAT00012 DATUM  EIN=(TTMMJJJJ,T.M.JJJJ,TT.MM.JJJJ),AUS=TT.MM.JJJJ
+			</span>
+			<label>
+				<input value="" class="validate[date[DAT00012]] text-input" type="text" name="date6" id="date6" />
+			</label>
+			<span>
+			  <b>Rule:</b>
+			  DAT00013 DATUM  EIN=(TTMM,T.M.,T.MM.,TT.M.),AUS=TT.MM.
+			</span>
+			<label>
+				<input value="" class="validate[date[DAT00013]] text-input" type="text" name="date6" id="date6" />
+			</label>
+
+
+
+
+		</fieldset>
+		</td>
+	</tr>
+	</tbody>
+	</table>
+	</form>
+</body>
+</html>
