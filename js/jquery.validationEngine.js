@@ -86,7 +86,7 @@
 			// unbind form.submit
 			form.off("submit", methods._onSubmitEvent);
 			form.removeData('jqv');
-            
+
 			form.off("click", "a[data-validation-engine-skip], a[class*='validate-skip'], button[data-validation-engine-skip], button[class*='validate-skip'], input[data-validation-engine-skip], input[class*='validate-skip']", methods._submitButtonClick);
 			form.removeData('jqv_submitButton');
 
@@ -110,7 +110,7 @@
 					// form is already validating.
 					// Should abort old validation and start new one. I don't know how to implement it.
 					return false;
-				} else {				
+				} else {
 					element.addClass('validating');
 					var options = element.data('jqv');
 					var valid = methods._validateFields(this);
@@ -145,6 +145,9 @@
 			}
 			return valid;
 		},
+
+
+
 		/**
 		*  Redraw prompts position, useful when you change the DOM state when validating
 		*/
@@ -200,7 +203,7 @@
 			 var options = form.data('jqv');
 			 var fadeDuration = (options && options.fadeDuration) ? options.fadeDuration : 0.3;
 			 var closingtag;
-			 
+
 			 if($(this).is("form") || $(this).hasClass("validationEngineContainer")) {
 				 closingtag = "parentForm"+methods._getClassName($(this).attr("id"));
 			 } else {
@@ -256,7 +259,7 @@
 		_onSubmitEvent: function() {
 			var form = $(this);
 			var options = form.data('jqv');
-			
+
 			//check if it is trigger from skipped button
 			if (form.data("jqv_submitButton")){
 				var submitButton = $("#" + form.data("jqv_submitButton"));
@@ -270,7 +273,7 @@
 
 			options.eventTrigger = "submit";
 
-			// validate each field 
+			// validate each field
 			// (- skip field ajax validation, not necessary IF we will perform an ajax form validation)
 			var r=methods._validateFields(form);
 
@@ -302,7 +305,7 @@
 			});
 			return status;
 		},
-		
+
 		/**
 		* Return true if the ajax field is validated
 		* @param {String} fieldid
@@ -384,7 +387,7 @@
 							destination=prompt_err.offset().top;
 						}
 					}
-					
+
 					// Offset the amount the page scrolls by an amount in px to accomodate fixed elements at top of page
 					if (options.scrollOffset) {
 						destination -= options.scrollOffset;
@@ -537,7 +540,7 @@
 			var limitErrors = false;
 			options.isError = false;
 			options.showArrow = true;
-			
+
 			// If the programmer wants to limit the amount of error messages per field,
 			if (options.maxErrorsPerField > 0) {
 				limitErrors = true;
@@ -554,7 +557,7 @@
 			}
 
 			for (var i = 0, field_errors = 0; i < rules.length; i++) {
-				
+
 				// If we are limiting errors, and have hit the max, break
 				if (limitErrors && field_errors >= options.maxErrorsPerField) {
 					// If we haven't hit a required yet, check to see if there is one in the validation rules for this
@@ -565,8 +568,8 @@
 					}
 					break;
 				}
-				
-				
+
+
 				var errorMsg = undefined;
 				switch (rules[i]) {
 
@@ -574,9 +577,15 @@
 						required = true;
 						errorMsg = methods._getErrorMessage(form, field, rules[i], rules, i, options, methods._required);
 						break;
-					case "custom":
-						errorMsg = methods._getErrorMessage(form, field, rules[i], rules, i, options, methods._custom);
+					case "customa":
+						errorMsg = methods._getErrorMessage(form, field, rules[i], rules, i, options, methods._customa);
 						break;
+					case "amount":
+						errorMsg = methods._getErrorMessage(form, field, rules[i], rules, i, options, methods._amount);
+						break;
+					case "date":
+						errorMsg = methods._getErrorMessage(form, field, rules[i], rules, i, options, methods._date);
+						break;						
 					case "groupRequired":
 						// Check is its the first of group, if not, reload validation with first field
 						// AND continue normal validation on present field
@@ -584,7 +593,7 @@
 						var firstOfGroup = form.find(classGroup).eq(0);
 						if(firstOfGroup[0] != field[0]){
 
-							methods._validateField(firstOfGroup, options, skipAjaxValidation); 
+							methods._validateField(firstOfGroup, options, skipAjaxValidation);
 							options.showArrow = true;
 
 						}
@@ -668,9 +677,9 @@
 
 					default:
 				}
-				
+
 				var end_validation = false;
-				
+
 				// If we were passed back an message object, check what the status was to determine what to do
 				if (typeof errorMsg == "object") {
 					switch (errorMsg.status) {
@@ -690,18 +699,18 @@
 							break;
 					}
 				}
-				
+
 				// If it has been specified that validation should end now, break
 				if (end_validation) {
 					break;
 				}
-				
+
 				// If we have a string, that means that we have an error, so add it to the error message.
 				if (typeof errorMsg == 'string') {
 					promptText += errorMsg + "<br/>";
 					options.isError = true;
 					field_errors++;
-				}	
+				}
 			}
 			// If the rules required is not added, an empty field is not validated
 			if(!required && !(field.val()) && field.val().length < 1) options.isError = false;
@@ -742,9 +751,9 @@
 			} else if (!options.isError) {
 				options.InvalidFields.splice(errindex, 1);
 			}
-				
+
 			methods._handleStatusCssClasses(field, options);
-	
+
 			/* run callback function for each field */
 			if (options.isError && options.onFieldFailure)
 				options.onFieldFailure(field);
@@ -755,30 +764,30 @@
 			return options.isError;
 		},
 		/**
-		* Handling css classes of fields indicating result of validation 
+		* Handling css classes of fields indicating result of validation
 		*
 		* @param {jqObject}
 		*            field
 		* @param {Array[String]}
-		*            field's validation rules            
+		*            field's validation rules
 		* @private
 		*/
 		_handleStatusCssClasses: function(field, options) {
 			/* remove all classes */
 			if(options.addSuccessCssClassToField)
 				field.removeClass(options.addSuccessCssClassToField);
-			
+
 			if(options.addFailureCssClassToField)
 				field.removeClass(options.addFailureCssClassToField);
-			
+
 			/* Add classes */
 			if (options.addSuccessCssClassToField && !options.isError)
 				field.addClass(options.addSuccessCssClassToField);
-			
+
 			if (options.addFailureCssClassToField && options.isError)
-				field.addClass(options.addFailureCssClassToField);		
+				field.addClass(options.addFailureCssClassToField);
 		},
-		
+
 		 /********************
 		  * _getErrorMessage
 		  *
@@ -797,7 +806,7 @@
 			 // Otherwise if we are doing a function call, make the call and return the object
 			 // that is passed back.
 	 		 var rule_index = jQuery.inArray(rule, rules);
-			 if (rule === "custom" || rule === "funcCall") {
+			 if (rule === "customa" || rule === "funcCall" || rule === "amount") {
 				 var custom_validation_type = rules[rule_index + 1];
 				 rule = rule + "[" + custom_validation_type + "]";
 				 // Delete the rule from the rules array so that it doesn't try to call the
@@ -835,12 +844,12 @@
 			if (validityProp != undefined) {
 				custom_message = field.attr("data-errormessage-"+validityProp);
 				// If there was an error message for it, return the message
-				if (custom_message != undefined) 
+				if (custom_message != undefined)
 					return custom_message;
 			}
 			custom_message = field.attr("data-errormessage");
 			 // If there is an inline custom error message, return it
-			if (custom_message != undefined) 
+			if (custom_message != undefined)
 				return custom_message;
 			var id = '#' + field.attr("id");
 			// If we have custom messages for the element's id, get the message for the rule from the id.
@@ -885,6 +894,8 @@
 			 "creditCard": "pattern-mismatch",
 			 "condRequired": "value-missing"
 		 },
+
+
 		/**
 		* Required validation
 		*
@@ -956,7 +967,7 @@
 					isValid = true;
 					return false;
 				}
-			}); 
+			});
 
 			if(!isValid) {
 		  return options.allrules[rules[i]].alertText;
@@ -972,12 +983,102 @@
 		*            user options
 		* @return an error string if validation failed
 		*/
-		_custom: function(field, rules, i, options) {
+	_amount: function(field, rules, i, options) {
 			var customRule = rules[i + 1];
 			var rule = options.allrules[customRule];
 			var fn;
+		//	alert("jqv:custom rule not found - "+customRule + " "+i+ " "+field + " "+rule);
 			if(!rule) {
 				alert("jqv:custom rule not found - "+customRule);
+				return;
+			}
+
+			if(rule["regex"]) {
+				 var ex=rule.regex;
+					if(!ex) {
+						alert("jqv:custom regex not found - "+customRule);
+						return;
+					}
+//					alert("ex :"+ex);
+					var pattern = new RegExp(ex);
+//alert("Result : "+field.val().length);
+
+					if (!pattern.test(field.val())) return options.allrules[customRule].alertText;
+
+					
+					var strArrayValue;
+					var beforeCommaValue = "";
+					var afterCommaValue = "";
+					if (field.val().indexOf(',') >= 0 )
+					{
+						strArrayValue = field.val().split(',');
+						beforeCommaValue = strArrayValue[0];
+						afterCommaValue = strArrayValue[1];
+					}else
+					{
+						beforeCommaValue = field.val();
+						afterCommaValue = "";
+					}
+					
+
+					//var subStr = beforeCommaValue;
+					//alert("IndexOf :"+ subStr.indexOf("+"));
+					while (beforeCommaValue.indexOf(".") >= 0 ){
+							beforeCommaValue = beforeCommaValue.substr(0,beforeCommaValue.indexOf(".")) + beforeCommaValue.substr(beforeCommaValue.indexOf(".")+1);	
+					}	
+					
+			//		alert ("String without special"+beforeCommaValue);
+					if (beforeCommaValue.indexOf("+") >= 0 )
+					{
+						beforeCommaValue = beforeCommaValue.substr(beforeCommaValue.indexOf("+")+1);
+					}
+					// alert("Substr :"+subStr);
+					
+					for (var i=beforeCommaValue.length; i<options.allrules[customRule].beforeComma; i++)
+  					{
+  						beforeCommaValue = "0" + beforeCommaValue;
+  					}
+			//		alert("beforeCommaValue :" +beforeCommaValue);
+			//		alert("afterCommaValue.length :"+afterCommaValue);
+					for (var i=afterCommaValue.length; i<options.allrules[customRule].afterComma; i++)
+  					{
+  						afterCommaValue = afterCommaValue + "0";
+  					}
+  			//		alert("afterCommaValue :" +afterCommaValue);
+  					alert("Final Value :" +beforeCommaValue + afterCommaValue);
+
+			} else if(rule["func"]) {
+				fn = rule["func"];
+
+				if (typeof(fn) !== "function") {
+					alert("jqv:custom parameter 'function' is no function - "+customRule);
+						return;
+				}
+
+				if (!fn(field, rules, i, options))
+					return options.allrules[customRule].alertText;
+			} else {
+				alert("jqv:custom type not allowed "+customRule);
+					return;
+			}
+		},
+		/**
+		* Validate rules
+		*
+		* @param {jqObject} field
+		* @param {Array[String]} rules
+		* @param {int} i rules index
+		* @param {Map}
+		*            user options
+		* @return an error string if validation failed
+		*/
+		_date: function(field, rules, i, options) {
+			var customRule = rules[i + 1];
+			var rule = options.allrules[customRule];
+			var fn;
+			var finalResult = "";
+			if(!rule) {
+				alert("jqv:custom rule not found2 - "+customRule);
 				return;
 			}
 			
@@ -990,15 +1091,159 @@
 					var pattern = new RegExp(ex);
 
 					if (!pattern.test(field.val())) return options.allrules[customRule].alertText;
-					
+
+					if(options.allrules[customRule].dateFormat == "TTMM") // DAT00003 DATUM  EIN=(TTMM,T.M.),AUS='TTMM'
+					{
+						if(field.val().indexOf('.')>=0)
+						{
+							finalResult = '0'+field.val().substr(0,1) + '0'+field.val().substr(2,1);
+						} else{
+							finalResult = 	field.val();
+						}
+					}else if(options.allrules[customRule].dateFormat == "TTMMJJ") // DAT00004 DATUM  EIN=(TTMMJJ,T.M.JJ,TT.MM.JJ),AUS='TTMMJJ'
+					{
+						if(field.val().indexOf('.')==1)
+						{
+							finalResult = '0'+ field.val().substr(0,1) + '0'+ field.val().substr(2,1) +field.val().substr(4,2);
+						}else if(field.val().indexOf('.')==2)
+						{
+							finalResult = field.val().substr(0,2) + field.val().substr(3,2) +field.val().substr(6,2);
+						}else{
+							finalResult = 	field.val();
+						}
+					}else if(options.allrules[customRule].dateFormat == "TTMMJJJJ") // DAT00005 DATUM  EIN=(TTMMJJJJ,TTMMJJ,T.M.JJ,T.M.JJJJ),AUS='TTMMJJJJ'
+					{
+						var twoDigitYear;
+						var fourDigitYear = "";
+						if(field.val().length == 6 && field.val().indexOf('.')==1)
+						{
+							twoDigitYear = field.val().substr(4,2);
+							if(twoDigitYear>49){
+								fourDigitYear = "19"+twoDigitYear;
+							}else{
+								fourDigitYear = "20"+twoDigitYear;
+							}
+							finalResult = '0'+ field.val().substr(0,1) + '0'+ field.val().substr(2,1) +fourDigitYear;
+						}else if(field.val().length == 8 && field.val().indexOf('.')==1)
+						{
+							finalResult = '0'+field.val().substr(0,1) + '0'+field.val().substr(2,1) +field.val().substr(4,4);
+						}else if(field.val().length == 6)
+						{
+							twoDigitYear = field.val().substr(4,2);
+							if(twoDigitYear>49){
+								fourDigitYear = "19"+twoDigitYear;
+							}else{
+								fourDigitYear = "20"+twoDigitYear;
+							}
+							finalResult = field.val().substr(0,4) + fourDigitYear;
+						}
+						else{
+							finalResult = 	field.val();
+						}
+					}else if(options.allrules[customRule].dateFormat == "MMJJ") //DAT00006 DATUM  EIN=(MMJJ,M.JJ),AUS='MMJJ'
+					{
+						if(field.val().indexOf('.')>=0)
+						{
+							finalResult = '0'+field.val().substr(0,1) + field.val().substr(2,2);
+						} else{
+							finalResult = 	field.val();
+						}
+					}else if(options.allrules[customRule].dateFormat == "MM.JJJJ") //DAT00008 DATUM EIN=(MM.JJ,MM.JJJJ),AUS='MM.JJJJ' 
+					{
+						if(field.val().length == 5 && field.val().indexOf('.')>=0)
+						{
+							twoDigitYear = field.val().substr(3,2);
+							if(twoDigitYear>49){
+								fourDigitYear = "19"+twoDigitYear;
+							}else{
+								fourDigitYear = "20"+twoDigitYear;
+							}
+							finalResult = field.val().substr(0,2) + "."+ fourDigitYear;
+						} else{
+							finalResult = 	field.val();
+						}
+					}
+					else if(options.allrules[customRule].dateFormat == "TT.MM.JJJJ") // DAT00012 DATUM  EIN=(TTMMJJJJ,T.M.JJJJ,TT.MM.JJJJ),AUS=TT.MM.JJJJ
+					{
+						if(field.val().length == 8 && field.val().indexOf('.')>=0)
+						{
+							finalResult = '0'+field.val().substr(0,1)+'.'+'0'+field.val().substr(2);
+						}else if(field.val().length == 8 && field.val().indexOf('.')<0)
+						{
+							finalResult = field.val().substr(0,2)+'.'+field.val().substr(2,2)+'.'+field.val().substr(4,4);
+						}
+						else{
+							finalResult = 	field.val();
+						}
+					}else if(options.allrules[customRule].dateFormat == "TT.MM.") // DAT00013 DATUM  EIN=(TTMM,T.M.,T.MM.,TT.M.),AUS=TT.MM.
+					{
+						if(field.val().length == 4 && field.val().indexOf('.')>=0)
+						{
+							finalResult = '0'+field.val().substr(0,1)+'.'+'0'+field.val().substr(2);
+						}else if(field.val().length == 4 && field.val().indexOf('.')<0)
+						{
+							finalResult = field.val().substr(0,2)+'.'+field.val().substr(2,2)+'.';
+						}else if(field.val().length == 5 && field.val().indexOf('.')==1)
+						{
+							finalResult = '0'+field.val();
+						}else if(field.val().length == 5 && field.val().indexOf('.')==2)
+						{
+							finalResult = field.val().substr(0,3)+'0'+field.val().substr(3,2);
+						}
+					}
+					alert("Final Result :"+finalResult);
 			} else if(rule["func"]) {
-				fn = rule["func"]; 
-				 
+				fn = rule["func"];
+
 				if (typeof(fn) !== "function") {
 					alert("jqv:custom parameter 'function' is no function - "+customRule);
 						return;
 				}
-				 
+
+				if (!fn(field, rules, i, options))
+					return options.allrules[customRule].alertText;
+			} else {
+				alert("jqv:custom type not allowed "+customRule);
+					return;
+			}
+		},
+		/**
+		* Validate rules
+		*
+		* @param {jqObject} field
+		* @param {Array[String]} rules
+		* @param {int} i rules index
+		* @param {Map}
+		*            user options
+		* @return an error string if validation failed
+		*/
+		_customa: function(field, rules, i, options) {
+			var customRule = rules[i + 1];
+			var rule = options.allrules[customRule];
+			var fn;
+			if(!rule) {
+				alert("jqv:custom rule not found - "+customRule);
+				return;
+			}
+
+			if(rule["regex"]) {
+				 var ex=rule.regex;
+					if(!ex) {
+						alert("jqv:custom regex not found - "+customRule);
+						return;
+					}
+					var pattern = new RegExp(ex);
+
+					if (!pattern.test(field.val())) return options.allrules[customRule].alertText;
+
+			} else if(rule["func"]) {
+				fn = rule["func"];
+
+				if (typeof(fn) !== "function") {
+					alert("jqv:custom parameter 'function' is no function - "+customRule);
+						return;
+				}
+
 				if (!fn(field, rules, i, options))
 					return options.allrules[customRule].alertText;
 			} else {
@@ -1384,7 +1629,7 @@
 					 }
 				 }
 			 }
-			 
+
 			 // If a field change event triggered this we want to clear the cache for this ID
 			 if (options.eventTrigger == "field") {
 				delete(options.ajaxValidCache[field.attr("id")]);
@@ -1458,7 +1703,7 @@
 									 else
 										methods._closePrompt(errorField);
 								}
-								
+
 								 // If a submit form triggered this, we want to re-submit the form
 								 if (options.eventTrigger == "submit")
 									field.closest("form").submit();
@@ -1467,7 +1712,7 @@
 						 errorField.trigger("jqv.field.result", [errorField, options.isError, msg]);
 					 }
 				 });
-				 
+
 				 return rule.alertTextLoad;
 			 }
 		 },
@@ -1529,7 +1774,7 @@
 			 // Because no error was found befor submitting
 			 if(ajaxform) prompt = false;
 			 // Check that there is indded text
-			 if($.trim(promptText)){ 
+			 if($.trim(promptText)){
 				 if (prompt)
 					methods._updatePrompt(field, prompt, promptText, type, ajaxed, options);
 				 else
@@ -1580,7 +1825,7 @@
 				var arrow = $('<div>').addClass("formErrorArrow");
 
 				//prompt positioning adjustment support. Usage: positionType:Xshift,Yshift (for ex.: bottomLeft:+20 or bottomLeft:-20,+10)
-				if (typeof(positionType)=='string') 
+				if (typeof(positionType)=='string')
 				{
 					var pos=positionType.indexOf(":");
 					if(pos!=-1)
@@ -1630,9 +1875,9 @@
 					field.after(prompt);
 				}
 			} else {
-				field.before(prompt);				
+				field.before(prompt);
 			}
-			
+
 			var pos = methods._calculatePosition(field, prompt, options);
 			prompt.css({
 				'position': positionType === 'inline' ? 'relative' : 'absolute',
@@ -1641,7 +1886,7 @@
 				"marginTop": pos.marginTopSize,
 				"opacity": 0
 			}).data("callerField", field);
-			
+
 
 			if (options.autoHidePrompt) {
 				setTimeout(function(){
@@ -1652,7 +1897,7 @@
 						prompt.remove();
 					});
 				}, options.autoHideDelay);
-			} 
+			}
 			return prompt.animate({
 				"opacity": 0.87
 			});
@@ -1770,9 +2015,9 @@
 
 			var promptTopPosition, promptleftPosition, marginTopSize;
 			var fieldWidth 	= field.width();
-			var fieldLeft 	= field.position().left; 
+			var fieldLeft 	= field.position().left;
 			var fieldTop 	=  field.position().top;
-			var fieldHeight 	=  field.height();	
+			var fieldHeight 	=  field.height();
 			var promptHeight = promptElmt.height();
 
 
@@ -1780,7 +2025,7 @@
 			promptTopPosition = promptleftPosition = 0;
 			// compensation for the arrow
 			marginTopSize = -promptHeight;
-		
+
 
 			//prompt positioning adjustment support
 			//now you can adjust prompt position
@@ -1817,7 +2062,7 @@
 				};
 			};
 
-			
+
 			switch (positionType) {
 				default:
 				case "topRight":
@@ -1827,7 +2072,7 @@
 
 				case "topLeft":
 					promptTopPosition +=  fieldTop;
-					promptleftPosition += fieldLeft; 
+					promptleftPosition += fieldLeft;
 					break;
 
 				case "centerRight":
@@ -1839,7 +2084,7 @@
 					promptleftPosition = fieldLeft - (promptElmt.width() + 2);
 					promptTopPosition = fieldTop+4;
 					marginTopSize = 0;
-					
+
 					break;
 
 				case "bottomLeft":
@@ -1858,7 +2103,7 @@
 					marginTopSize = 0;
 			};
 
-		
+
 
 			//apply adjusments if any
 			promptleftPosition += shiftX;
@@ -2027,7 +2272,7 @@
 		isError: false,
 		// Limit how many displayed errors a field can have
 		maxErrorsPerField: false,
-		
+
 		// Caches field validation status, typically only bad status are created.
 		// the array is used during ajax form validation to detect issues early and prevent an expensive submit
 		ajaxValidCache: {},
@@ -2042,7 +2287,7 @@
 		validateAttribute: "class",
 		addSuccessCssClassToField: "",
 		addFailureCssClassToField: "",
-		
+
 		// Auto-hide prompt
 		autoHidePrompt: false,
 		// Delay before auto-hide
