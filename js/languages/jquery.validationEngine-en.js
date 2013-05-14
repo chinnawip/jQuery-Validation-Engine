@@ -204,6 +204,7 @@
                   // "regex": /^(((0[1-9]|[12][0-9]|3[01])(0[1-9]|1[012])([0-9]{4}))|([1-9][\.][1-9][\.][0-9]{4})|((0[1-9]|[12][0-9]|3[01])[\.](0[1-9]|1[012])[\.][0-9]{4}))$/,
                    "dateFormat": "TTMMJJJJ,T.M.JJJJ,TT.MM.JJJJ",
                    "dateFormatOutput": "TT.MM.JJJJ",
+                   "dateRange": "",
                    "alertText": "* Please enter valid date in correct format"
                 },
                 // DAT00013 DATUM  EIN=(TTMM,T.M.,T.MM.,TT.M.),AUS=TT.MM.
@@ -223,6 +224,8 @@
                      "beforeComma": 2,
                      "afterComma":0,
                      "amountRange": ">0",
+                     "plus": "+",
+                     "minus": "-",
                      "alertText": "* Enter valid amount in '99' format.",
                      "alertTextRange": " Please enter valid amount range >0"
                 },
@@ -231,7 +234,9 @@
                      "beforeComma": 5,
                      "afterComma":0,
                      "amountRange": ">0",
-                     "alertText": "* Enter valid amount '99999' format.",
+                     "plus": "+",
+                     "minus": "-",
+                     "alertText": "* Enter valid amount in '99999' format.",
                      "alertTextRange": " Please enter valid amount range >0"
                 },
                 "BTRM0100": {
@@ -260,7 +265,7 @@
                      "beforeComma": 1,
                      "afterComma":4,
                      "plus": "+",
-                     "alertText": "* Enter valid amount in correct format"
+                     "alertText": "* Enter valid amount in '9,9999' format"
                 },
                 "BTRM0106": {
                     // "regex": /^[\+]?((([0-9]{1}))|([0-9]{1}))?(([\,]([0-9]{1,6})))?$/,
@@ -1106,6 +1111,8 @@
                      "beforeComma": 2,
                      "afterComma":0,
                      "amountRange": "0:23",
+                     "plus": "+",
+                     "minus": "-",
                      "alertText": "* Enter valid amount in '99' format.",
                      "alertTextRange": "* Enter valid amount between 0 and 23."
                 },
@@ -1114,6 +1121,8 @@
                      "beforeComma": 2,
                      "afterComma":0,
                      "amountRange": "0:59",
+                     "plus": "+",
+                     "minus": "-",
                      "alertText": "* Enter valid amount in '99' format.",
                      "alertTextRange": "* Enter valid amount between 0 and 59."
                 },     
@@ -1122,6 +1131,8 @@
                      "beforeComma": 2,
                      "afterComma":0,
                      "amountRange": "0:24",
+                     "plus": "+",
+                     "minus": "-",
                      "alertText": "* Enter valid amount in '99' format.",
                      "alertTextRange": "* Enter valid amount between 0 and 24."
                 },  
@@ -1130,6 +1141,8 @@
                      "beforeComma": 2,
                      "afterComma":0,
                      "amountRange": "0:10",
+                     "plus": "+",
+                     "minus": "-",
                      "alertText": "* Enter valid amount in '99' format.",
                      "alertTextRange": "* Enter valid amount between 0 and 10."
                 },
@@ -1138,16 +1151,18 @@
                        "beforeComma": 7,
                        "afterComma": 0,
                        "amountRange": "<0",
+                       "plus": "+",
                        "minus": "-",
                        "alertText": "* Enter valid amount in '9999999' format.",
                        "alertTextRange": "* Enter valid amount less than 0"                                            
                 },
                 "BTRW0202": {
-                       "regex": /^[\+]?([0-9]{1,3}\.([0-9]{3}\.)*[0-9]{3}|[0-9]{1,2})(([\,][0-9]{1,2}))?$/,
+                     //  "regex": /^[\+]?([0-9]{1,3}\.([0-9]{3}\.)*[0-9]{3}|[0-9]{1,2})(([\,][0-9]{1,2}))?$/,
                        "beforeComma": 2,
                        "afterComma": 2,
                        "amountRange": "0:99,99",
                        "plus": "+",
+                       "minus": "-",
                        "alertText": "* Enter valid amount in '99,99' format.",
                        "alertTextRange": "* Enter valid amount between 0 and 99,99"
                 },                
