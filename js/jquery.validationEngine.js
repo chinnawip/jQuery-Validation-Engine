@@ -13,7 +13,7 @@
  (function($) {
 
 	"use strict";
-
+	
 	var methods = {
 
 		/**
@@ -984,7 +984,6 @@
 		* @return an error string if validation failed
 		*/
 		_validateAmountRange: function(fieldValueAmount, amountRangeFormat, options,ruleName){
-			//alert("start..:"+fieldValueAmount+ ", "+amountRangeFormat+ ', '+ruleName);
 			var amountRange ;
 			if(amountRangeFormat.indexOf(":")>=0){
 				var amountRangeArray = amountRangeFormat.split(":");
@@ -994,13 +993,11 @@
 				{
 					rangeEnd = rangeEnd.replace(/\,/g,'.');
 				}
-//				alert("rangeEnd :"+rangeEnd);
 				if(fieldValueAmount.indexOf(",") >= 0 )
 				{
 					fieldValueAmount = fieldValueAmount.replace(/\,/g,'.');
 				}
-//				alert("fieldValueAmount :"+fieldValueAmount);
-				if (!(fieldValueAmount >= rangeStart && fieldValueAmount <= rangeEnd))
+				if (!(parseInt(fieldValueAmount) >= parseInt(rangeStart) && parseInt(fieldValueAmount) <= parseInt(rangeEnd)))
 				{
 					return options.allrules[ruleName].alertTextRange ;
 				}
@@ -1042,6 +1039,7 @@
 			var customRule = rules[i + 1];
 			var rule = options.allrules[customRule];
 			var fn;
+			var input = $("input")[0];
 		
 			if(!rule) {
 				alert("jqv:custom rule not found - "+customRule);
@@ -1054,19 +1052,20 @@
 			if(rule["beforeComma"] && rule.beforeComma > 0){
 				regEx = beforeCommaRegEx.replace(/#/g,rule.beforeComma);
 			}else{
-				alert("The property 'beforeComma' is not defined.");
-				return;
+				jQuery.data(input,"resultString","The property 'beforeComma' is not defined.");
+				//alert("The property 'beforeComma' is not defined.");
+				return "The property 'beforeComma' is not defined.";
 			}
 			if(rule["afterComma"] && rule.afterComma > 0 ){
 				regEx = regEx + afterCommaRegEx.replace(/#/g,rule.afterComma);
 			}
-//			 alert("regEx :"+regEx );
 			if(rule["plus"])
 			{ if(rule.plus == "+"){
 				operatorRegEx = "[\\+";
 				}else{
-					alert("The value of the property 'plus' should be '+'.");
-					return;
+					jQuery.data(input,"resultString","The value of the property 'plus' should be '+'.");
+					//alert("The value of the property 'plus' should be '+'.");
+					return "The value of the property 'plus' should be '+'.";
 				}
 			}
 			if(rule["minus"])
@@ -1074,8 +1073,9 @@
 			  if(rule.minus == "-"){
 			  	operatorRegEx = operatorRegEx + "\\-"
 			  }else{
-					alert("The value of the property 'minus' should be '-'.");
-					return;
+			  	jQuery.data(input,"resultString","The value of the property 'minus' should be '-'.");
+					//alert("The value of the property 'minus' should be '-'.");
+				return "The value of the property 'minus' should be '-'.";
 				}
 			}
 			if (operatorRegEx!=""){
@@ -1083,7 +1083,6 @@
 			}
 			
 			regEx = "^"+operatorRegEx+ regEx+"$";
-			//alert("RegEx :"+regEx);
 			//if(rule["regex"]) {
 		    if(rule["beforeComma"]) {
 				// var ex=rule.regex;
@@ -1095,7 +1094,10 @@
 					}
 					var pattern = new RegExp(ex);
 
-					if (!pattern.test(field.val())) return options.allrules[customRule].alertText;
+					if (!pattern.test(field.val())){
+						jQuery.data(input,"resultString",options.allrules[customRule].alertText);
+						return options.allrules[customRule].alertText;
+					} 
 
 					var strArrayValue;
 					var beforeCommaValue = "";
@@ -1118,58 +1120,16 @@
 						var amountRangeFormat = options.allrules[customRule].amountRange;
 						var errMsg = methods._validateAmountRange(beforeCommaValue, amountRangeFormat, options,customRule);
 						if(errMsg != undefined){
+							jQuery.data(input,"resultString",errMsg);
 							return errMsg;
 						}
 					}
 
-					// if(customRule == "BTRLVE01")
-					// {
-					// 	if(!(field.val() >=0 && field.val() <= 23)){
-					// 		return options.allrules[customRule].alertText;
-					// 	}
-					// }else if(customRule == "BTRLVE02")
-					// {
-					// 	if(!(field.val() >=0 && field.val() <= 59)){
-					// 		return options.allrules[customRule].alertText;
-					// 	}
-					// }else if(customRule == "BTRLVE03")
-					// {
-					// 	if(!(field.val() >=0 && field.val() <= 24)){
-					// 		return options.allrules[customRule].alertText;
-					// 	}
-					// }else if(customRule == "BTRLVF01")
-					// {
-					// 	if(!(field.val() >=0 && field.val() <= 10)){
-					// 		return options.allrules[customRule].alertText;
-					// 	}
-					// }else if(customRule == "BTRN0700")
-					// {
-					// 	if(!(field.val() <0)){
-					// 		return options.allrules[customRule].alertText;
-					// 	}
-					// }else if(customRule == "BTRW0202")
-					// {
-					// 	var fieldValueInt;
-					// 	if (field.val().indexOf(',') >= 0 )
-					// 	{
-					// 		 fieldValueInt = beforeCommaValue +'.'+afterCommaValue;
-					// 	}else
-					// 	{
-					// 		fieldValueInt = beforeCommaValue;
-					// 	}
-
-					// 	if(!(fieldValueInt >=0 && fieldValueInt <=99.99)){
-					// 		return options.allrules[customRule].alertText;
-					// 	}
-					// }
+				
 					var minusPrefixValue = "";
 					while (beforeCommaValue.indexOf(".") >= 0 ){
 							beforeCommaValue = beforeCommaValue.substr(0,beforeCommaValue.indexOf(".")) + beforeCommaValue.substr(beforeCommaValue.indexOf(".")+1);	
 					}	
-					// if (beforeCommaValue.indexOf("+") >= 0 )
-					// {
-					// 	beforeCommaValue = beforeCommaValue.substr(beforeCommaValue.indexOf("+")+1);
-					// }else 
 					if (beforeCommaValue.indexOf("-") >= 0 )
 					{
 						beforeCommaValue = beforeCommaValue.substr(beforeCommaValue.indexOf("-")+1);
@@ -1223,6 +1183,7 @@
 					 var beforeCommaValueStr = "";
 					 if(beforeCommaValue.length > options.allrules[customRule].beforeComma)
 					{
+						jQuery.data(input,"resultString",options.allrules[customRule].alertText);
 						return options.allrules[customRule].alertText;
 					 	//beforeCommaValueStr = beforeCommaValue;
 					 	//beforeCommaValue = beforeCommaValueStr.substr(0,options.allrules[customRule].beforeComma);
@@ -1237,8 +1198,9 @@
   					{
   						afterCommaValue = afterCommaValue + "0";
   					}
-  			
-  					alert("Final Value :"  + beforeCommaValue + afterCommaValue);
+  					var input = $("input")[0];
+  					jQuery.data(input,"resultString",beforeCommaValue + afterCommaValue);
+  					//alert("Final Value :"  + beforeCommaValue + afterCommaValue);
 
 			} else if(rule["func"]) {
 				fn = rule["func"];
@@ -1254,6 +1216,7 @@
 				alert("jqv:custom type not allowed "+customRule);
 					return;
 			}
+			// return validateAmount(field, rules, i, options);
 		},
 		/**
 		* Get start Range and end range date
@@ -1375,24 +1338,17 @@
 		* @return an error string if validation failed
 		*/
 		_date: function(field, rules, i, options) {
+			var input = $("input")[0];
 			var customRule = rules[i + 1];
 			var rule = options.allrules[customRule];
 			var fn;
 			var finalResult = "";
-		//	methods._isDate(field.val());
 			if(!rule) {
 				alert("jqv:custom rule not found2 - "+customRule);
 				return;
 			}
-			// DAT00003 DATUM  EIN=(TTMM,T.M.),AUS='TTMM'
 			var dateFormatInput = rule["dateFormat"];
-//			alert ("dateFormatInput :"+dateFormatInput);
 			var dateFormatInputArray = dateFormatInput.split(',');
-//			alert ("dateFormatInput :"+dateFormatInput);
-//			alert ("dateFormatInputArray :"+dateFormatInputArray.length);
-//			alert ("length :" +dateFormatInputArray[0].charAt(0));
-//			var regexStart = "(";
-//			var regexEnd = ")";
 			var regex = "";
 			var regexTemp = "";
 			
@@ -1412,7 +1368,6 @@
 			  	var dateFormatArrayTemp = dateFormatTemp.split(",");
 				  regexTemp = "("; // for inner bracket start
 				   for( var k = 0; k < dateFormatArrayTemp.length; k++){
-			//	   	alert("dateFormatArrayTemp :"+dateFormatArrayTemp[k]);
 				   		 switch (dateFormatArrayTemp[k]){
 					    	 	case "TT" :
 					    	 		regexTemp = regexTemp + "(0[1-9]|[12][0-9]|3[01])";
@@ -1444,11 +1399,7 @@
 				} //for i loop
 				regex = regex.substr(0,(regex.length - 1));
 				regex = '^(' + regex + ')$';
-//				alert ("regex :"+regex);
-//				var a = rule["regex"];
-//				a = a+"";
-//				alert ("a :"+a.length + " ; regex :"+ regex.length);
-//			alert ("rule-regex :"+rule["regex"]);
+
 		//	if(rule["regex"]) {
 			if(rule["dateFormat"]) {
 			//	 var ex=rule.regex;
@@ -1460,7 +1411,10 @@
 					var pattern = new RegExp(ex);
 					//var pattern = new RegExp(regex);
 
-					if (!pattern.test(field.val())) return options.allrules[customRule].alertText + ' ' + options.allrules[customRule].dateFormat.replace(/,/g," or ") ;
+					if (!pattern.test(field.val())){
+					  	jQuery.data(input,"resultString",options.allrules[customRule].alertText + ' ' + options.allrules[customRule].dateFormat.replace(/,/g," or "));
+						return options.allrules[customRule].alertText + ' ' + options.allrules[customRule].dateFormat.replace(/,/g," or ") ;
+					}						
 
 					if(options.allrules[customRule].dateFormatOutput == "TTMM") // DAT00003 DATUM  EIN=(TTMM,T.M.),AUS='TTMM'
 					{
@@ -1538,28 +1492,10 @@
 							var finalResultDate = new Date(finalResult.substr(0,2)+'.'+"01."+finalResult.substr(3,4));
 							var errMsg = methods._validateDateRange(finalResultDate, dateRangeFormat, options,customRule);
 							if (errMsg != undefined){
+								jQuery.data(input,"resultString",errMsg);
 								return errMsg;
 							}
 						}
-						// var dateRangeArray = dateRangeFormat.split(":");
-						// var dateRange = "01." + dateRangeArray[0].substr(4,2) +"."+dateRangeArray[0].substr(0,4);
-						// var todayDate ;
-						// if(dateRangeArray[1] == "TODAYM"){
-						// 	todayDate = new Date();
-						// }else{
-						// 	//return options.allrules[customRule].alertTextRange + " between " +dateRangeFormat.replace(dateRangeFormatStart,dateRange+ " and ");
-						// 	return options.allrules[customRule].alertTextRangeFormat;
-						// }
-						
-						// var rangeStart = new Date(dateRange);
-						// var rangeEnd = new Date((todayDate.getMonth()+1) +'.'+todayDate.getDate() + '.' + todayDate.getFullYear());
-						// var finalResultDate = new Date(finalResult.substr(0,2)+'.'+"01."+finalResult.substr(3,4));
-						// if (!(finalResultDate >= rangeStart && finalResultDate <= rangeEnd))
-						// {
-						// 	//return options.allrules[customRule].alertTextRange + " between  " +dateRangeFormat.replace(dateRangeFormatStart,dateRange + " and ");
-						// 	return options.allrules[customRule].alertTextRange ;
-						// }
-					
 					}else if(options.allrules[customRule].dateFormatOutput == "MM.JJJJ") //DAT00008 DATUM EIN=(MM.JJ,MM.JJJJ),AUS='MM.JJJJ' 
 					{
 						if(field.val().length == 5 && field.val().indexOf('.')>=0)
@@ -1591,7 +1527,7 @@
 						}else if(field.val().length == 8 && field.val().indexOf('.')==1)
 						{
 							finalResult = '0'+field.val().substr(0,1) + '.'+ '0'+field.val().substr(2,1) + '.' + field.val().substr(4,4);
-						}else if(field.val().length == 6)
+						}else if(field.val().length == 6 && field.val().indexOf('.')< 0)
 						{
 							twoDigitYear = field.val().substr(4,2);
 							if(twoDigitYear>49){
@@ -1600,107 +1536,21 @@
 								fourDigitYear = "20"+twoDigitYear;
 							}
 							finalResult = field.val().substr(0,2) +'.'+field.val().substr(2,2) + '.' + fourDigitYear;
-						}
-						else{
-							finalResult = 	field.val().substr(0,2) +'.'+field.val().substr(2,2) + '.' + field.val().substr(4,4);
-						}
-						var dateRangeFormat = options.allrules[customRule].dateRange;
-						// var todayDate = new Date();
-						var finalresultArray = finalResult.split('.');
-						var finalResultDate = new Date(finalresultArray[1] +'.'+finalresultArray[0] + '.' + finalresultArray[2]);
-
-						var errMsg = methods._validateDateRange(finalResultDate,dateRangeFormat,options,customRule);
-						if (errMsg != undefined){
-							return errMsg;
-						}
-						// if (dateRangeFormat.indexOf("<=") >=0){
-						// 	if(!(finalResultDate <= todayDate)){
-						// 		return options.allrules[customRule].alertTextRange +" " + dateRangeFormat;
-						// 	}
-						// }else if (dateRangeFormat.indexOf("<") >=0){
-						// 	if(!(finalResultDate < todayDate)){
-						// 		return options.allrules[customRule].alertTextRange +" " + dateRangeFormat;
-						// 	}
-						// }else if (dateRangeFormat.indexOf(">=") >=0){
-						// 	if(!(finalResultDate >= todayDate)){
-						// 		return options.allrules[customRule].alertTextRange +" " + dateRangeForma;
-						// 	}
-						// }else if (dateRangeFormat.indexOf(">") >=0){
-						// 	if(!(finalResultDate > todayDate)){
-						// 		return options.allrules[customRule].alertTextRange +" " + dateRangeFormat;
-						// 	}
-						// }
-						
-						// if(!(finalresultArray[2] <= todayDate.getFullYear()))
-						// {
-						// 	return options.allrules[customRule].alertText;
-						// }else if (finalresultArray[2] == todayDate.getFullYear())
-						// {
-						//    if (!(finalresultArray[1] <= (todayDate.getMonth()+1)))
-						// 	{
-						// 		return options.allrules[customRule].alertText;
-						// 	}else if  (finalresultArray[1] == (todayDate.getMonth()+1))
-						// 	{
-						// 		if(!(finalresultArray[0] <= todayDate.getDate()))
-						// 		{
-						// 			return options.allrules[customRule].alertText;
-						// 		}
-						// 	}
-						// }
-					}else if(options.allrules[customRule].dateFormatOutput == "TT.MM.JJJJ") // DAT00011 DATUM  EIN=(TTMMJJJJ,TTMMJJ,T.M.JJ,T.M.JJJJ),AUS=TT.MM.JJJJ, ZEIT=(HEUTE:HEUTE+6M)
-					{
-						var twoDigitYear;
-						var fourDigitYear = "";
-						if(field.val().length == 6 && field.val().indexOf('.')==1)
-						{
-							twoDigitYear = field.val().substr(4,2);
-							if(twoDigitYear>49){
-								fourDigitYear = "19"+twoDigitYear;
-							}else{
-								fourDigitYear = "20"+twoDigitYear;
-							}
-							finalResult = '0'+ field.val().substr(0,1) +'.'+ '0'+ field.val().substr(2,1) +'.'+fourDigitYear;
-						}else if(field.val().length == 8 && field.val().indexOf('.')==1)
-						{
-							finalResult = '0'+field.val().substr(0,1) + '.'+ '0'+field.val().substr(2,1) + '.' + field.val().substr(4,4);
-						}else if(field.val().length == 6)
-						{
-							twoDigitYear = field.val().substr(4,2);
-							if(twoDigitYear>49){
-								fourDigitYear = "19"+twoDigitYear;
-							}else{
-								fourDigitYear = "20"+twoDigitYear;
-							}
-							finalResult = field.val().substr(0,2) +'.'+field.val().substr(2,2) + '.' + fourDigitYear;
-						}
-						else{
-							finalResult = 	field.val().substr(0,2) +'.'+field.val().substr(2,2) + '.' + field.val().substr(4,4);
-						}
-						//var todayDate = new Date();
-						//var sixMonthsFromToday = new Date((todayDate.getMonth()+7) +'.'+todayDate.getDate() + '.' + todayDate.getFullYear());
-						//var todayDateNoTime = new Date((todayDate.getMonth()+1) +'.'+todayDate.getDate() + '.' + todayDate.getFullYear());
-						var finalresultArray = finalResult.split('.');
-						var finalResultDate = new Date(finalresultArray[1] +'.'+finalresultArray[0] + '.' + finalresultArray[2]);
-
-						//if(!(finalResultDate >= todayDateNoTime && finalResultDate <= sixMonthsFromToday)){
-						//	return options.allrules[customRule].alertText;
-						//}
-						var dateRangeFormat = options.allrules[customRule].dateRange;
-						var errMsg = methods._validateDateRange(finalResultDate,dateRangeFormat,options,customRule);
-						if (errMsg != undefined){
-							return errMsg;
-						}
-					}else if(options.allrules[customRule].dateFormatOutput == "TT.MM.JJJJ") // DAT00012 DATUM  EIN=(TTMMJJJJ,T.M.JJJJ,TT.MM.JJJJ),AUS=TT.MM.JJJJ
-					{
-						if(field.val().length == 8 && field.val().indexOf('.')>=0)
-						{
-							finalResult = '0'+field.val().substr(0,1)+'.'+'0'+field.val().substr(2);
 						}else if(field.val().length == 8 && field.val().indexOf('.')<0)
 						{
 							finalResult = field.val().substr(0,2)+'.'+field.val().substr(2,2)+'.'+field.val().substr(4,4);
 						}
 						else{
 							finalResult = 	field.val();
+						}
+						var dateRangeFormat = options.allrules[customRule].dateRange;
+						var finalresultArray = finalResult.split('.');
+						var finalResultDate = new Date(finalresultArray[1] +'.'+finalresultArray[0] + '.' + finalresultArray[2]);
+
+						var errMsg = methods._validateDateRange(finalResultDate,dateRangeFormat,options,customRule);
+						if (errMsg != undefined){
+							jQuery.data(input,"resultString",errMsg);
+							return errMsg;
 						}
 					}else if(options.allrules[customRule].dateFormatOutput == "TT.MM.") // DAT00013 DATUM  EIN=(TTMM,T.M.,T.MM.,TT.M.),AUS=TT.MM.
 					{
@@ -1718,7 +1568,8 @@
 							finalResult = field.val().substr(0,3)+'0'+field.val().substr(3,2);
 						}
 					}
-					alert("Final Result :"+finalResult);
+					jQuery.data(input,"resultString",finalResult);
+					//alert("Final Result :"+finalResult);
 			} else if(rule["func"]) {
 				fn = rule["func"];
 
@@ -2751,7 +2602,9 @@
 		 }
 	};
 
-
+	// for global access (especially for Qunit)
+    $.methodAmount = methods._amount;
+    $.methodDate = methods._date;
 
 	// LEAK GLOBAL OPTIONS
 	$.validationEngine= {fieldIdCounter: 0,defaults:{
@@ -2834,3 +2687,7 @@
 	}};
 	$(function(){$.validationEngine.defaults.promptPosition = methods.isRTL()?'topLeft':"topRight"});
 })(jQuery);
+
+
+
+
