@@ -1115,6 +1115,8 @@
 					if (beforeCommaValue.indexOf("+") >= 0 )
 					{
 						beforeCommaValue = beforeCommaValue.substr(beforeCommaValue.indexOf("+")+1);
+					}else if(beforeCommaValue.indexOf("-") >= 0 ){
+						beforeCommaValue = parseInt(beforeCommaValue) + "";
 					}
 					if(rule["amountRange"]){
 						var amountRangeFormat = options.allrules[customRule].amountRange;
